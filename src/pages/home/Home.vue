@@ -1,13 +1,22 @@
 <template>
     <div>
-       Hello World
+        <home-header></home-header>
+        <home-swiper></home-swiper>
     </div>
 
 </template>
 
+
 <script>
+  import HomeHeader from './components/Header';
+  import HomeSwiper from './components/Swiper';
+
   export default {
-    name: 'Home'
+    name: 'Home',
+    components: {
+      HomeSwiper,
+      HomeHeader
+    }
   };
 </script>
 
