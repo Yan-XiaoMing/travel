@@ -28,7 +28,7 @@
     .header
         display: flex
         height: 0.86rem;
-        background: "${style['theme-color']}";
+        background: #00bcd4;
         color: #ffffff;
         line-height: 0.86rem;
 
