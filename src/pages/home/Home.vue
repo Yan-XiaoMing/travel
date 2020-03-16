@@ -1,6 +1,6 @@
 <template>
     <div>
-        <home-header :city="city"></home-header>
+        <home-header></home-header>
         <home-swiper :list="swiperList"></home-swiper>
         <home-icons :list="iconList"></home-icons>
         <home-recommend :list="recommendList"></home-recommend>
@@ -17,6 +17,7 @@
     import HomeRecommend from './components/Recommend';
     import HomeWeekend from './components/Weekend';
     import axios from 'axios';
+    import {mapState} from 'vuex';
     export default {
         name: 'Home',
         components: {
@@ -26,24 +27,33 @@
             HomeRecommend,
             HomeWeekend
         },
-        data(){
+        data() {
             return {
-                city:'',
-                swiperList:[],
+                lastCity: '',
+                swiperList: [],
                 iconList: [],
-                recommendList:[],
-                weekendList:[],
+                recommendList: [],
+                weekendList: []
+            };
+        },
+        computed: {
+            ...mapState(['city'])
+        },
+        activated() {
+            if (this.lastCity !== this.city) {
+                this.lastCity = this.city;
+                this.getHomeInfo();
             }
         },
         methods: {
             getHomeInfo() {
-                axios.get('/static/mock/index.json')
+                axios.get('/static/mock/index.json?city=' + this.city)
                         .then(this.getHomeInfoSucc);
             },
             getHomeInfoSucc(res) {
                 res = res.data;
-                if(res.ret&&res.data){
-                    this.city = res.data.city;
+                if (res.ret && res.data) {
+
                     this.swiperList = res.data.swiperList;
                     this.iconList = res.data.iconList;
                     this.recommendList = res.data.recommendList;
@@ -52,6 +62,7 @@
             }
         },
         mounted() {
+            this.lastCity = this.city;
             this.getHomeInfo();
         }
     };
