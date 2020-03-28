@@ -1,9 +1,12 @@
 <template>
   <div>
-    <router-link tag="div" to="/" class="header-abs">
+    <router-link tag="div" to="/" class="header-abs" v-show="showAbs">
       <div class="iconfont header-abs-back">&#xeb99;</div>
     </router-link>
-    <div class="header-fixed"></div>
+    <router-link to="/" class="header-fixed" v-show="!showAbs" :style="opacityStyle">
+      <div class="iconfont header-fixed-back">&#xeb99;</div>
+      景点详情
+    </router-link>
   </div>
 
 </template>
@@ -14,17 +17,32 @@
     components: {},
     data() {
       return {
-        showGallery: false,
-        imgs: ['http://img1.qunarzz.com/sight/p0/1801/ad/ad7b65ceb7a8420ea3.img.jpg_r_800x800_8e9eceda.jpg',
-          'http://img1.qunarzz.com/sight/p0/1801/24/24ff8c2d2c495b4ca3.img.jpg_r_800x800_01b9bdd2.jpg']
+        showAbs: true,
+        opacityStyle:{
+          opacity: 0
+        }
       };
     },
-    methods: {
-      handleBannerClick() {
-        this.showGallery = true;
-      },
-      handleGalleryClose() {
-        this.showGallery = false;
+    activated() {
+      window.addEventListener('scroll',this.handleScroll)
+    },
+    deactivated() {
+      window.removeEventListener('scroll',this.handleScroll);
+    },
+    methods:{
+      handleScroll(){
+        const top = document.documentElement.scrollTop;
+        if (top>60 ){
+          let opacity = top/140;
+          opacity = opacity>1?1:opacity;
+          this.opacityStyle = {
+            opacity
+          }
+          this.showAbs = false
+        }
+        else{
+          this.showAbs = true
+        }
       }
     }
   };
@@ -46,21 +64,27 @@
       color: #fff
       font-size: .4rem
 
+  .header-fixed
+    z-index : 2
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    text-align: center
+    height: .86rem
+    line-height: .86rem
+    color: white
+    background: #00bcd4
+    font-size: .32rem
+
+    .header-fixed-back
+      position: absolute
+      top: 0
+      left: 0
+      width: .64rem
+      text-align: center
+      font-size: .4rem
+      color: #ffffff
+
 </style>
-<!--.header-fixed-->
-<!--position :relative-->
-<!--overflow : hidden-->
-<!--text-align :center-->
-<!--height : .86rem-->
-<!--line-height : .86rem-->
-<!--color : white-->
-<!--background : #00bcd4-->
-<!--font-size: .32rem-->
-<!--.header-back{-->
-<!--position : absolute-->
-<!--top :0-->
-<!--left : 0-->
-<!--width : .64rem-->
-<!--text-align :center-->
-<!--font-size : .4rem-->
-<!--color :#ffffff-->
+
